@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from 'react'
+import Picture from "./components/Picture"
+import SearchBar from "./components/SearchBar"
+import {useNasaData} from './Hooks/hooks'
+import {AppComponent, Title} from './app.style'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const { picture, setDate, date, loading} = useNasaData()
+
+    return (
+        <AppComponent>
+            <Title>NASA picture of the day!</Title>
+            <SearchBar setDate={setDate} date={date}/>
+            { !loading
+                ? <Picture title={picture.title}
+                           description={picture.explanation}
+                           images={{default: picture.url}}/>
+                : <div><h2>LOADING</h2></div>
+            }
+        </AppComponent>
+    )
 }
 
 export default App;

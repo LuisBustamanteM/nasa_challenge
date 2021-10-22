@@ -1,0 +1,10 @@
+{
+  "env": "prod",
+  "dev": {
+    "baseUrl": "https://localhost:8080"
+  },
+  "prod": {
+    "baseUrl": "https://api.nasa.gov/planetary/apod"
+  },
+  "key": "o4YTLvzO3eJe7TY5qXkHqI8N6e2xh2qsbaRy3eg7"
+}
