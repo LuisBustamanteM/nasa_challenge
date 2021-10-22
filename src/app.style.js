@@ -9,6 +9,7 @@ export const AppComponent = styled.div`
 
 export const Title = styled.h1`
   margin-bottom: 24px;
+  font-size: 4em;
   padding: 0;
   text-align: center;
 `

@@ -11,7 +11,6 @@ export const useNasaData = () => {
     const {baseUrl} = config[env]
     const {key} = config
 
-
     useEffect(() => {
         let url =  `${baseUrl}?api_key=${key}&date=${date}`
         setLoading(true)

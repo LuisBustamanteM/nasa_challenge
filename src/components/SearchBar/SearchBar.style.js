@@ -3,12 +3,14 @@ import styled from 'styled-components'
 export const SearchBarContainer = styled.div`
   display: flex;
   position: relative;
+  flex-grow: 1;
   width: 100%;
 `
 
 export const DatePickerContainer = styled.div`
   margin: 0 auto;
 `;
+
 export const Label = styled.label`
   margin: 0;
   padding: 24px;

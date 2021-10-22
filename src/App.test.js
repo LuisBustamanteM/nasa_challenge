@@ -1,65 +1,50 @@
 import React from 'react'
-import {render, screen, getByRole, act, waitFor, getByText} from '@testing-library/react';
+import {render, screen, getByRole, act, waitFor, getByText, fireEvent} from '@testing-library/react';
 import App from './App';
 import mockData from "./mockData.json";
-//import {renderHook, act } from '@testing-library/react-hooks'
+import config from "./config.json";
+const env = config.env
 
-/*
-* Display Components
-*   - Form
-*     - DATE
-*       - Label for date
-*       - Check that date updates and calls the request
-*   - Image Content Component
-*     - Title
-*     - Description
-*     - Image
-* Test api call
-* Test api call with parameter
-* */
+const build = () => {
+  const {container, debug} = render(<App/>)
 
-
-const unmockedFetch = global.fetch
-
-beforeAll(() => {
-    global.fetch = () =>
-        Promise.resolve({
-            json: () => Promise.resolve(mockData)
-        })
-})
-
-afterAll(() => {
-    global.fetch = unmockedFetch
-})
-
-// const mockApi = jest
-//     .spyOn(global, 'fetch')
-//     .mockImplementation(() =>
-//         Promise.resolve({json: () => Promise.resolve(mockData)})
-//     )
-
+  return {
+    container,
+    debug,
+    title: () => getByRole(container, "heading", {level: 1}),
+    dateInput: () => getByRole(container, "date"),
+    pictureTitle: () => getByRole(container, "heading", {level:2})
+  }
+}
 
 describe("Displays Picture of the day app", () => {
-  const build = async () => {
-    const {container, debug} = render(<App/>)
+  it('Calls NASA api and updates current picture and data', async () => {
 
-    return {
-      container,
-      debug,
-      title: () => getByRole(container, "heading", {level: 1}),
-      description: (text) => getByText(container, text),
-    }
-  }
+    const fetchMock = jest
+        .spyOn(global, 'fetch')
+        .mockImplementation(() =>
+            Promise.resolve({ json: () => Promise.resolve(mockData) })
+        )
 
-  // TODO: Check full integration of the app
-  it.skip('Accesses the api and returns a picture object', async () => {
-    const {description} = build()
+    const {title, dateInput, pictureTitle, debug} = build()
+    const today = new Date()
+    const isoToday = today.toISOString().split('T')[0]
+    const {baseUrl} = config[env]
+    const {key} = config
+    const url =  `${baseUrl}?api_key=${key}&date=${isoToday}`
 
-    await act(async () => {
+    expect(title()).toHaveTextContent("NASA picture of the day!")
+    expect(dateInput()).toHaveDisplayValue(isoToday)
+    await act( async () => {
       await waitFor(() => {
+        expect(pictureTitle()).toHaveTextContent(mockData.title)
 
-        expect(description(mockData.explanation))
+        fireEvent.change(dateInput(), {target: { value: isoToday}})
+        expect(dateInput()).toHaveDisplayValue(isoToday)
+
       })
     })
+
+    expect(fetchMock).toHaveBeenCalledWith(url)
   });
 })
