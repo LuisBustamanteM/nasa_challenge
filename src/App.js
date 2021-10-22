@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import Picture from "./components/Picture"
 import SearchBar from "./components/SearchBar"
 import {useNasaData} from './Hooks/hooks'

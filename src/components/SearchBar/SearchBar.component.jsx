@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {SearchBarContainer, Label, DatePicker, DatePickerContainer } from "./SearchBar.style";
 
 const SearchBarComponent = ({date, setDate}) => {
